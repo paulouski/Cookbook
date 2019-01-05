@@ -1,0 +1,12 @@
+D:\projects\Itransition\Cookbook\Cookbook\bin\Debug\netcoreapp2.0\Cookbook.deps.json
+D:\projects\Itransition\Cookbook\Cookbook\bin\Debug\netcoreapp2.0\Cookbook.runtimeconfig.json
+D:\projects\Itransition\Cookbook\Cookbook\bin\Debug\netcoreapp2.0\Cookbook.runtimeconfig.dev.json
+D:\projects\Itransition\Cookbook\Cookbook\bin\Debug\netcoreapp2.0\Cookbook.dll
+D:\projects\Itransition\Cookbook\Cookbook\bin\Debug\netcoreapp2.0\Cookbook.pdb
+D:\projects\Itransition\Cookbook\Cookbook\obj\Debug\netcoreapp2.0\Cookbook.csprojAssemblyReference.cache
+D:\projects\Itransition\Cookbook\Cookbook\obj\Debug\netcoreapp2.0\Cookbook.csproj.CoreCompileInputs.cache
+D:\projects\Itransition\Cookbook\Cookbook\obj\Debug\netcoreapp2.0\Cookbook.AssemblyInfoInputs.cache
+D:\projects\Itransition\Cookbook\Cookbook\obj\Debug\netcoreapp2.0\Cookbook.AssemblyInfo.cs
+D:\projects\Itransition\Cookbook\Cookbook\obj\Debug\netcoreapp2.0\Cookbook.dll
+D:\projects\Itransition\Cookbook\Cookbook\obj\Debug\netcoreapp2.0\Cookbook.pdb
+D:\projects\Itransition\Cookbook\Cookbook\obj\Debug\netcoreapp2.0\UserSecretsAssemblyInfo.cs
