@@ -2,6 +2,18 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v2.0": {
+      "AspNet.Security.OAuth.Vkontakte/2.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Authentication.OAuth": "2.0.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/AspNet.Security.OAuth.Vkontakte.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/AspNet.Security.OAuth.Vkontakte.dll": {}
+        }
+      },
       "Imgur.API/4.0.1": {
         "type": "package",
         "dependencies": {
@@ -5184,6 +5196,19 @@
     }
   },
   "libraries": {
+    "AspNet.Security.OAuth.Vkontakte/2.0.0": {
+      "sha512": "KO9+ua+diXdQ7ihjWejNPItgwiCkLeaW7VtO2nCwcOSdlQ9ViHnmzRLsQ+hpeDmFdgXnPxyiwQaYx6ggmlLKeQ==",
+      "type": "package",
+      "path": "aspnet.security.oauth.vkontakte/2.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "aspnet.security.oauth.vkontakte.2.0.0.nupkg.sha512",
+        "aspnet.security.oauth.vkontakte.nuspec",
+        "lib/netstandard2.0/AspNet.Security.OAuth.Vkontakte.dll",
+        "lib/netstandard2.0/AspNet.Security.OAuth.Vkontakte.xml"
+      ]
+    },
     "Imgur.API/4.0.1": {
       "sha512": "vqtaBYA5RPTV2TrtYj7/6P9kfWYJXtnRYAHpKrTNRymaQdlcZhEFWW8PpGfRSsUm/kqIIpxEWUjNTa/5qgGbMA==",
       "type": "package",
@@ -14031,6 +14056,7 @@
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.0": [
+      "AspNet.Security.OAuth.Vkontakte >= 2.0.0",
       "Imgur.API >= 4.0.1",
       "MailKit >= 2.1.2",
       "Microsoft.AspNetCore.All >= 2.0.9",
@@ -14080,6 +14106,10 @@
     "frameworks": {
       "netcoreapp2.0": {
         "dependencies": {
+          "AspNet.Security.OAuth.Vkontakte": {
+            "target": "Package",
+            "version": "[2.0.0, )"
+          },
           "Imgur.API": {
             "target": "Package",
             "version": "[4.0.1, )"

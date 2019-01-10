@@ -1,0 +1,50 @@
+﻿@model Cookbook.Models.Recipe
+@{
+    ViewData["Title"] = @Model.RecipeName;
+}
+<h2>Details</h2>
+<div>
+    <h4>@Model.RecipeName</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Author)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Author.UserName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Category)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Category)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Abstract)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Abstract)
+        </dd>
+        <dt>
+            Ingredients
+        </dt>
+        <dd>
+            <dl>
+                @foreach (var ingredient in Model.IngredientsForRecipe)
+                {
+                    <dt>
+                        @ingredient.IngredientName
+                    </dt>
+                    <dd>
+                        @ingredient.Amount
+                    </dd>
+                }
+            </dl>
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Delete" asp-route-id="@Model.RecipeId">Delete</a>
+    <a asp-controller="Recipe" asp-action="Edit" asp-route-id="@Model.RecipeId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

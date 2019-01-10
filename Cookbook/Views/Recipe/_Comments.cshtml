@@ -1,0 +1,43 @@
+﻿@model Cookbook.Models.Recipe
+@inject UserManager<ApplicationUser> UserManager
+@using Cookbook.Data
+@inject ApplicationDbContext _context
+<section id="comments">
+    <div class="container">
+        <h2>Comments</h2>
+        @if (Model.Comments.Count == 0)
+        {
+            <p>Be the first to post a comment</p>
+        }
+        else
+        {
+            foreach (var comment in Model.Comments.OrderBy(a => a.CreatedDate))
+            {
+                <label>@Html.Raw(comment.Author.UserName)</label>
+                @Html.Raw(comment.CreatedDate)
+                <br />
+                <strong>@comment.Text</strong>
+
+                <br />
+                <br />
+
+            }
+        }
+    </div>
+</section>
+@if (User.IsInRole("Admin") || User.IsInRole("Author"))
+{
+    <form asp-action="AddComment" asp-route-postid="@ViewContext.RouteData.Values["id"]" asp-antiforgery="false">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="input-group">
+                    <input asp-for="CurrentComment" type="text" class="form-control" placeholder="Write your comment" required />
+                    <span class="input-group-btn">
+                        <input type="submit" value="Submit" class="btn btn-default" />
+                    </span>
+                </div>
+            </div>
+        </div>
+    </form>
+}
+

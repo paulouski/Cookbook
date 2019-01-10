@@ -124,7 +124,7 @@ namespace Cookbook.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Language = "ru", Theme = "green"};
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -154,7 +154,7 @@ namespace Cookbook.Controllers
         {
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
-            return RedirectToAction(nameof(HomeController.Index), "Home");
+            return RedirectToAction(nameof(RecipeController.Index), "Recipe");
         }
 
         [HttpPost]
@@ -242,7 +242,7 @@ namespace Cookbook.Controllers
         {
             if (userId == null || code == null)
             {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
+                return RedirectToAction(nameof(RecipeController.Index), "Recipe");
             }
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
@@ -363,7 +363,7 @@ namespace Cookbook.Controllers
             }
             else
             {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
+                return RedirectToAction(nameof(RecipeController.Index), "Recipe");
             }
         }
 

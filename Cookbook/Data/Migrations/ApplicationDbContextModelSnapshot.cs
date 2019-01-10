@@ -53,6 +53,8 @@ namespace Cookbook.Data.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
+                    b.Property<int?>("RecipeId");
+
                     b.Property<string>("SecurityStamp");
 
                     b.Property<string>("Theme");
@@ -72,7 +74,61 @@ namespace Cookbook.Data.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("RecipeId");
+
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("Cookbook.Models.Comment", b =>
+                {
+                    b.Property<string>("CommentId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AuthorId");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("RecipeId");
+
+                    b.Property<int?>("RecipeId1");
+
+                    b.Property<string>("Text")
+                        .IsRequired();
+
+                    b.HasKey("CommentId");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("RecipeId1");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("Cookbook.Models.Recipe", b =>
+                {
+                    b.Property<int>("RecipeId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AuthorId");
+
+                    b.Property<string>("Category")
+                        .IsRequired();
+
+                    b.Property<string>("Description")
+                        .IsRequired();
+
+                    b.Property<DateTime>("LastEditTime");
+
+                    b.Property<int>("Rating");
+
+                    b.Property<string>("RecipeName")
+                        .IsRequired();
+
+                    b.HasKey("RecipeId");
+
+                    b.HasIndex("AuthorId");
+
+                    b.ToTable("Recipes");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -181,6 +237,31 @@ namespace Cookbook.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("Cookbook.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("Cookbook.Models.Recipe")
+                        .WithMany("RatesUsers")
+                        .HasForeignKey("RecipeId");
+                });
+
+            modelBuilder.Entity("Cookbook.Models.Comment", b =>
+                {
+                    b.HasOne("Cookbook.Models.ApplicationUser", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId");
+
+                    b.HasOne("Cookbook.Models.Recipe")
+                        .WithMany("Comments")
+                        .HasForeignKey("RecipeId1");
+                });
+
+            modelBuilder.Entity("Cookbook.Models.Recipe", b =>
+                {
+                    b.HasOne("Cookbook.Models.ApplicationUser", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

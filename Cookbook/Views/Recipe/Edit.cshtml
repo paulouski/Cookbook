@@ -1,0 +1,50 @@
+﻿@model Cookbook.Models.Recipe
+@using Cookbook.Data
+@inject ApplicationDbContext context
+@{
+    ViewData["Title"] = "Edit";
+}
+<form asp-action="Create">
+    <div class="form-horizontal">
+        <h4>Create new article</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="RecipeName" class="col-md-2 control-label"></label>
+            <div class="col-md-3">
+                <input asp-for="RecipeName" class="form-control" />
+                <span asp-validation-for="RecipeName" class="text-danger" />
+            </div>
+            <label asp-for="Category" class="col-md-2 control-label"></label>
+            <div class="col-md-3">
+                <input asp-for="Category" class="form-control" />
+                <span asp-validation-for="Category" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Abstract" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <textarea asp-for="Abstract" class="form-control" required></textarea>
+                <span asp-validation-for="Abstract" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Description" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <textarea asp-for="Description" class="form-control" rows="20"></textarea>
+                <span asp-validation-for="Description" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+@section Scripts
+    {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=2jlub46uysalskjzfgguwjvexy0ozm5nwpzvqjss52u8pa2m"></script>
+    <script>tinymce.init({ selector: 'textarea' });</script>
+}

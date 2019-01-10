@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.0",
-    "signature": "a93991857853c0fbca572277c959ea45798805ec"
+    "signature": "6dcdc23ab6940493e12e101bdd1f1bebd5dbf3e7"
   },
   "compilationOptions": {
     "defines": [
@@ -24,6 +24,7 @@
     ".NETCoreApp,Version=v2.0": {
       "Cookbook/1.0.0": {
         "dependencies": {
+          "AspNet.Security.OAuth.Vkontakte": "2.0.0",
           "Imgur.API": "4.0.1",
           "MailKit": "2.1.2",
           "Microsoft.AspNetCore.All": "2.0.9",
@@ -36,6 +37,20 @@
         },
         "compile": {
           "Cookbook.dll": {}
+        }
+      },
+      "AspNet.Security.OAuth.Vkontakte/2.0.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Authentication.OAuth": "2.0.4"
+        },
+        "runtime": {
+          "lib/netstandard2.0/AspNet.Security.OAuth.Vkontakte.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.0.0.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/AspNet.Security.OAuth.Vkontakte.dll": {}
         }
       },
       "Imgur.API/4.0.1": {
@@ -4965,6 +4980,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "AspNet.Security.OAuth.Vkontakte/2.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-KO9+ua+diXdQ7ihjWejNPItgwiCkLeaW7VtO2nCwcOSdlQ9ViHnmzRLsQ+hpeDmFdgXnPxyiwQaYx6ggmlLKeQ==",
+      "path": "aspnet.security.oauth.vkontakte/2.0.0",
+      "hashPath": "aspnet.security.oauth.vkontakte.2.0.0.nupkg.sha512"
     },
     "Imgur.API/4.0.1": {
       "type": "package",

@@ -100,6 +100,8 @@ namespace Cookbook.Controllers
             {
                 Username = user.UserName,
                 Email = user.Email,
+                Language = user.Language,
+                Theme = user.Theme,
                 StatusMessage = StatusMessage
             };
 
@@ -120,6 +122,10 @@ namespace Cookbook.Controllers
             {
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
+
+            user.Language = model.Language;
+            user.Theme = model.Theme;
+            await _userManager.UpdateAsync(user);
 
             var nameExist = _userManager.Users.FirstOrDefault(n => n.UserName == model.Username);
             if (nameExist == null)

@@ -25,7 +25,7 @@ namespace Cookbook.Services
             string password = "!123QWEasd";
             if (await userManager.FindByEmailAsync(adminEmail) == null)
             {
-                var admin = new ApplicationUser() { Email = adminEmail, UserName = adminEmail, EmailConfirmed = true};
+                var admin = new ApplicationUser() { Email = adminEmail, UserName = adminEmail, EmailConfirmed = true, Language = "ru", Theme = "green"};
                 IdentityResult result = await userManager.CreateAsync(admin, password);
                 if (result.Succeeded)
                 {
