@@ -8,8 +8,8 @@ namespace Cookbook.Models
 {
     public class Comment
     {
-        public string CommentId { get; set; }
-        public string RecipeId { get; set; }
+        public int CommentId { get; set; }
+        public int RecipeId { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
 
         public ApplicationUser Author { get; set; }

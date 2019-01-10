@@ -27,7 +27,7 @@ namespace Cookbook.Controllers
         public RecipeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
         {
             _context = context;
-            _userManager = userManager;
+             _userManager = userManager;
             _hostingEnvironment = hostingEnvironment;
         }
 
@@ -44,26 +44,17 @@ namespace Cookbook.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(Recipe recipeModel)
+        public async Task<IActionResult> Edit(int id, Recipe recipeModel)
         {
 
-            var recipe = await _context.Recipes.SingleOrDefaultAsync(m => m.RecipeId == recipeModel.RecipeId);
-            //if (post.TagString != null)
-            //{
-            //    char[] delimeterChars = { ' ', ',' };
-            //    string[] words = post.TagString.Split(delimeterChars);
-            //    foreach (var word in words)
-            //    {
-            //        if (await _context.Tags.FindAsync(word) == null)
-            //            post.Tags.Add(new Tag() { Name = word });
-            //    }
-            //}
+            var recipe = await _context.Recipes.SingleOrDefaultAsync(m => m.RecipeId == id);
+
             recipe.RecipeName = recipeModel.RecipeName;
             recipe.Category = recipeModel.Category;
             recipe.Description = recipeModel.Description;
             recipe.IngredientsForRecipe = recipeModel.IngredientsForRecipe;
             recipe.LastEditTime = DateTime.UtcNow;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
@@ -83,12 +74,12 @@ namespace Cookbook.Controllers
             }
             recipe.Rating += 1;
             recipe.RatesUsers.Add(await _userManager.GetUserAsync(User));
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return RedirectToAction("Details/" + recipeId);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddComment(int postId, Comment comment)
+        public async Task<IActionResult> AddComment(int postId, Recipe recipe)
         {
             var commentedRecipe = await _context.Recipes.SingleOrDefaultAsync(m => m.RecipeId == postId);
             if (commentedRecipe == null)
@@ -96,14 +87,14 @@ namespace Cookbook.Controllers
                 return NotFound();
             }
 
-            //_context.Comments.Add(comment);       ????
-            commentedRecipe.Comments.Add(new Comment()
+            _context.Comments.Add(new Comment()
             {
+                RecipeId = postId,
                 Author = await _userManager.GetUserAsync(User),
                 CreatedDate = DateTime.UtcNow,
-                Text = comment.Text
+                Text = recipe.CurrentComment
             });
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Redirect("Details/" + postId);
         }
 
@@ -117,13 +108,15 @@ namespace Cookbook.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
-
             var post = await _context.Recipes.Include(a => a.Author).SingleOrDefaultAsync(m => m.RecipeId == id);
 
             if (post == null)
             {
                 return NotFound();
             }
+
+            var comments = _context.Comments.Where(x => x.RecipeId == id).ToList();
+            post.Comments = comments;
 
             return View(post);
         }
@@ -134,16 +127,11 @@ namespace Cookbook.Controllers
         }
 
         [HttpPost]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("RecipeName, Abstract,Description,Category")] Recipe recipe)
         {
             if (ModelState.IsValid)
             {
-                //if (recipe.Picture == null)
-                //{
-                //    var img = await _context.Source.FindAsync("DefaultUser");
-                //    recipe.Picture = img.Picture;
-                //}
                 recipe.LastEditTime = DateTime.UtcNow;
                 recipe.Author = await _userManager.GetUserAsync(User);
                 _context.Add(recipe);

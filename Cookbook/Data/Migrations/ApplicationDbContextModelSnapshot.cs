@@ -104,15 +104,38 @@ namespace Cookbook.Data.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("Cookbook.Models.IngredientForRecipe", b =>
+                {
+                    b.Property<int>("IngredientForRecipeId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Amount");
+
+                    b.Property<string>("IngredientName");
+
+                    b.Property<int>("RecipeId");
+
+                    b.HasKey("IngredientForRecipeId");
+
+                    b.HasIndex("RecipeId");
+
+                    b.ToTable("IngredientForRecipe");
+                });
+
             modelBuilder.Entity("Cookbook.Models.Recipe", b =>
                 {
                     b.Property<int>("RecipeId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Abstract")
+                        .IsRequired();
+
                     b.Property<string>("AuthorId");
 
                     b.Property<string>("Category")
                         .IsRequired();
+
+                    b.Property<string>("CurrentComment");
 
                     b.Property<string>("Description")
                         .IsRequired();
@@ -255,6 +278,14 @@ namespace Cookbook.Data.Migrations
                     b.HasOne("Cookbook.Models.Recipe")
                         .WithMany("Comments")
                         .HasForeignKey("RecipeId1");
+                });
+
+            modelBuilder.Entity("Cookbook.Models.IngredientForRecipe", b =>
+                {
+                    b.HasOne("Cookbook.Models.Recipe")
+                        .WithMany("IngredientsForRecipe")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Cookbook.Models.Recipe", b =>
