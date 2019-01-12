@@ -35,6 +35,31 @@
                 <span asp-validation-for="Description" class="text-danger" />
             </div>
         </div>
+        <div  class="form-group" id="ingredients" data-count="@Model.IngredientsForRecipe.Count">
+            <div class="col-md-2 control-label">
+                <b>Ингредиенты: </b>
+            </div>
+            <div class="col-md-3">
+                <input type="button" value="Add ingredient" id="addIngredient" class="btn btn-default" />
+                <input type="button" value="Del ingredient" id="delIngredient" class="btn btn-default" />
+            </div>
+            @{
+                for (int i = 0; i < Model.IngredientsForRecipe.Count; i++)
+                {
+                    string tempId = "p" + i.ToString();
+                    <div class="col-md-12" id="@tempId">
+                        <div class="col-md-3 control-label"><b>Имя ингредиента #@(i+1)</b></div>
+                        <div class="col-md-3">
+                            <input asp-for="IngredientsForRecipe[i].IngredientName" class="form-control" />
+                        </div>
+                        <div class="col-md-3 control-label"><b>Количество ингредиента #@(i+1)</b></div>
+                        <div class="col-md-3">
+                            <input asp-for="IngredientsForRecipe[i].Amount" class="form-control" />
+                        </div>
+                    </div>
+                }
+            }
+        </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Edit" class="btn btn-default" />
@@ -45,6 +70,33 @@
 @section Scripts
     {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        var data = $('#ingredients').attr('data-count');
+        var counter = parseInt(data, 10);
+        $("#addIngredient").click(function () {
+            if (counter < 0) counter = 0;
+            $("#ingredients").append(
+                '<div class="col-md-12" id=p'+counter+'></div>'
+            );
+            $("#p"+counter).append(
+                '<div class="col-md-3 control-label"><b>Имя ингредиента #' + (counter + 1) +'</b></div>'
+            );
+            $("#p" + counter).append(
+                '<div class="col-md-3"><input class="form-control valid" type="text" id="IngredientsForRecipe_' + counter + '__IngredientName" name="IngredientsForRecipe[' + counter +'].IngredientName" value="" aria-invalid="false"></div>' 
+            );
+            $("#p" + counter).append(
+                '<div class="col-md-3 control-label"><b>Количество ингредиента #' + (counter + 1) +'</b></div>'
+            );
+            $("#p" + counter).append(
+                '<div class="col-md-3"><input class="form-control valid" type="text" id="IngredientsForRecipe_' + counter + '__Amount" name="IngredientsForRecipe[' + counter +'].Amount" value="" aria-invalid="false"></div>'
+            );
+            counter++;
+        });
+        $("#delIngredient").click(function () {
+            $("#p" + (counter-1)).remove();
+            counter--;
+        });
+    </script>
     <script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=2jlub46uysalskjzfgguwjvexy0ozm5nwpzvqjss52u8pa2m"></script>
     <script>
         tinymce.init({

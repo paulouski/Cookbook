@@ -34,7 +34,7 @@ namespace Cookbook.Controllers
         public async Task<IActionResult> Edit(int id)
         {
 
-            var recipe = await _context.Recipes.SingleOrDefaultAsync(m => m.RecipeId == id);
+            var recipe = await _context.Recipes.Include(a => a.IngredientsForRecipe).FirstOrDefaultAsync(m => m.RecipeId == id);
             if (recipe == null)
             {
                 return NotFound();
@@ -47,7 +47,7 @@ namespace Cookbook.Controllers
         public async Task<IActionResult> Edit(int id, Recipe recipeModel)
         {
 
-            var recipe = await _context.Recipes.SingleOrDefaultAsync(m => m.RecipeId == id);
+            var recipe = await _context.Recipes.FirstOrDefaultAsync(m => m.RecipeId == id);
 
             recipe.RecipeName = recipeModel.RecipeName;
             recipe.Category = recipeModel.Category;
@@ -62,7 +62,7 @@ namespace Cookbook.Controllers
         public async Task<IActionResult> AddLike(int recipeId)
         {
 
-            var recipe = _context.Recipes.Include(a => a.Author).Include(a => a.RatesUsers).SingleOrDefault(m => m.RecipeId == recipeId);
+            var recipe = await _context.Recipes.Include(a => a.Author).Include(a => a.RatesUsers).FirstOrDefaultAsync(m => m.RecipeId == recipeId);
             if (recipe == null)
             {
                 return NotFound();
@@ -81,7 +81,7 @@ namespace Cookbook.Controllers
         [HttpPost]
         public async Task<IActionResult> AddComment(int postId, Recipe recipe)
         {
-            var commentedRecipe = await _context.Recipes.SingleOrDefaultAsync(m => m.RecipeId == postId);
+            var commentedRecipe = await _context.Recipes.FirstOrDefaultAsync(m => m.RecipeId == postId);
             if (commentedRecipe == null)
             {
                 return NotFound();
@@ -108,7 +108,7 @@ namespace Cookbook.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
-            var post = await _context.Recipes.Include(a => a.Author).SingleOrDefaultAsync(m => m.RecipeId == id);
+            var post = await _context.Recipes.Include(a => a.Author).Include(i =>i.IngredientsForRecipe).FirstOrDefaultAsync(m => m.RecipeId == id);
 
             if (post == null)
             {
@@ -128,7 +128,7 @@ namespace Cookbook.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RecipeName, Abstract,Description,Category")] Recipe recipe)
+        public async Task<IActionResult> Create(Recipe recipe)
         {
             if (ModelState.IsValid)
             {
@@ -144,7 +144,7 @@ namespace Cookbook.Controllers
         public async Task<IActionResult> Delete(int id)
         {
 
-            var recipe = await _context.Recipes.SingleOrDefaultAsync(m => m.RecipeId == id);
+            var recipe = await _context.Recipes.FirstOrDefaultAsync(m => m.RecipeId == id);
             if (recipe == null)
             {
                 return NotFound();
@@ -159,11 +159,15 @@ namespace Cookbook.Controllers
         {
 
             var recipe = await _context.Recipes.Include(a => a.RatesUsers).Include(a => a.Comments)
-                            .Include(a => a.Author).SingleOrDefaultAsync(m => m.RecipeId == id);
+                            .Include(a => a.Author).Include(i=>i.IngredientsForRecipe).FirstOrDefaultAsync(m => m.RecipeId == id);
 
             foreach (var comment in recipe.Comments)
             {
                 _context.Remove(comment);
+            }
+            foreach (var ingredient in recipe.IngredientsForRecipe)
+            {
+                _context.Remove(ingredient);
             }
 
             _context.Recipes.Remove(recipe);
