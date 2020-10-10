@@ -22,11 +22,12 @@ namespace Cookbook.Controllers
     public class RecipeController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IOptions<ImgurSettings> _imgurSettings;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public RecipeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IOptions<ImgurSettings> imgurSettings)
+        public RecipeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
+            IHostingEnvironment hostingEnvironment, IOptions<ImgurSettings> imgurSettings)
         {
             _context = context;
             _userManager = userManager;
@@ -36,8 +37,8 @@ namespace Cookbook.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-
-            var recipe = await _context.Recipes.Include(a => a.IngredientsForRecipe).FirstOrDefaultAsync(m => m.RecipeId == id);
+            var recipe = await _context.Recipes.Include(a => a.IngredientsForRecipe)
+                .FirstOrDefaultAsync(m => m.RecipeId == id);
             if (recipe == null)
             {
                 return NotFound();
@@ -49,7 +50,6 @@ namespace Cookbook.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int id, Recipe recipeModel)
         {
-
             var recipe = await _context.Recipes.FirstOrDefaultAsync(m => m.RecipeId == id);
 
             recipe.RecipeName = recipeModel.RecipeName;
@@ -64,8 +64,8 @@ namespace Cookbook.Controllers
         [HttpPost]
         public async Task<IActionResult> AddLike(int recipeId)
         {
-
-            var recipe = await _context.Recipes.Include(a => a.Author).Include(a => a.RatesUsers).FirstOrDefaultAsync(m => m.RecipeId == recipeId);
+            var recipe = await _context.Recipes.Include(a => a.Author).Include(a => a.RatesUsers)
+                .FirstOrDefaultAsync(m => m.RecipeId == recipeId);
             if (recipe == null)
             {
                 return NotFound();
@@ -75,6 +75,7 @@ namespace Cookbook.Controllers
             {
                 return RedirectToAction("Details/" + recipeId);
             }
+
             recipe.Rating += 1;
             recipe.RatesUsers.Add(await _userManager.GetUserAsync(User));
             await _context.SaveChangesAsync();
@@ -90,7 +91,7 @@ namespace Cookbook.Controllers
                 return NotFound();
             }
 
-            _context.Comments.Add(new Comment()
+            _context.Comments.Add(new Comment
             {
                 RecipeId = postId,
                 Author = await _userManager.GetUserAsync(User),
@@ -111,7 +112,8 @@ namespace Cookbook.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
-            var post = await _context.Recipes.Include(a => a.Author).Include(i => i.IngredientsForRecipe).FirstOrDefaultAsync(m => m.RecipeId == id);
+            var post = await _context.Recipes.Include(a => a.Author).Include(i => i.IngredientsForRecipe)
+                .FirstOrDefaultAsync(m => m.RecipeId == id);
 
             if (post == null)
             {
@@ -141,12 +143,12 @@ namespace Cookbook.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
+
             return View(recipe);
         }
 
         public async Task<IActionResult> Delete(int id)
         {
-
             var recipe = await _context.Recipes.FirstOrDefaultAsync(m => m.RecipeId == id);
             if (recipe == null)
             {
@@ -156,18 +158,19 @@ namespace Cookbook.Controllers
             return View(recipe);
         }
 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-
             var recipe = await _context.Recipes.Include(a => a.RatesUsers).Include(a => a.Comments)
-                            .Include(a => a.Author).Include(i => i.IngredientsForRecipe).FirstOrDefaultAsync(m => m.RecipeId == id);
+                .Include(a => a.Author).Include(i => i.IngredientsForRecipe).FirstOrDefaultAsync(m => m.RecipeId == id);
 
             foreach (var comment in recipe.Comments)
             {
                 _context.Remove(comment);
             }
+
             foreach (var ingredient in recipe.IngredientsForRecipe)
             {
                 _context.Remove(ingredient);
@@ -181,11 +184,10 @@ namespace Cookbook.Controllers
         [HttpPost]
         public async Task<string> UploadImage(IFormFile file)
         {
-
             var client = new ImgurClient(
                 _imgurSettings.Value.ClientId,
                 _imgurSettings.Value.ClientSecret
-                );
+            );
             var endpoint = new ImageEndpoint(client);
             IImage image;
             using (var fileStream = file.OpenReadStream())
@@ -194,7 +196,7 @@ namespace Cookbook.Controllers
                 {
                     await fileStream.CopyToAsync(ms);
                     var fileBytes = ms.ToArray();
-                    string s = Convert.ToBase64String(fileBytes);
+                    var s = Convert.ToBase64String(fileBytes);
                     image = await endpoint.UploadImageBinaryAsync(fileBytes);
                 }
             }
