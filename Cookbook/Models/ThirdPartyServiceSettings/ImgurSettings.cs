@@ -1,4 +1,4 @@
-﻿namespace Cookbook.Models.ThirdPartyServices
+﻿namespace Cookbook.Models.ThirdPartyServiceSettings
 {
     public class ImgurSettings
     {

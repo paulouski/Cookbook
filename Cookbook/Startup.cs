@@ -1,6 +1,6 @@
 ﻿using Cookbook.Data;
 using Cookbook.Models;
-using Cookbook.Models.ThirdPartyServices;
+using Cookbook.Models.ThirdPartyServiceSettings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -42,6 +42,7 @@ namespace Cookbook
             });
 
             services.Configure<ImgurSettings>(Configuration.GetSection("ImgurCredentials"));
+            services.Configure<MailSettings>(Configuration.GetSection("MailCredentials"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
