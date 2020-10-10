@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Cookbook.Data;
 using Cookbook.Models;
+using Cookbook.Models.ThirdPartyServices;
 using Imgur.API.Authentication.Impl;
 using Imgur.API.Endpoints.Impl;
 using Imgur.API.Models;
@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace Cookbook.Controllers
 {
@@ -23,12 +24,14 @@ namespace Cookbook.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IOptions<ImgurSettings> _imgurSettings;
 
-        public RecipeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
+        public RecipeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IOptions<ImgurSettings> imgurSettings)
         {
             _context = context;
-             _userManager = userManager;
+            _userManager = userManager;
             _hostingEnvironment = hostingEnvironment;
+            _imgurSettings = imgurSettings;
         }
 
         public async Task<IActionResult> Edit(int id)
@@ -108,7 +111,7 @@ namespace Cookbook.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
-            var post = await _context.Recipes.Include(a => a.Author).Include(i =>i.IngredientsForRecipe).FirstOrDefaultAsync(m => m.RecipeId == id);
+            var post = await _context.Recipes.Include(a => a.Author).Include(i => i.IngredientsForRecipe).FirstOrDefaultAsync(m => m.RecipeId == id);
 
             if (post == null)
             {
@@ -159,7 +162,7 @@ namespace Cookbook.Controllers
         {
 
             var recipe = await _context.Recipes.Include(a => a.RatesUsers).Include(a => a.Comments)
-                            .Include(a => a.Author).Include(i=>i.IngredientsForRecipe).FirstOrDefaultAsync(m => m.RecipeId == id);
+                            .Include(a => a.Author).Include(i => i.IngredientsForRecipe).FirstOrDefaultAsync(m => m.RecipeId == id);
 
             foreach (var comment in recipe.Comments)
             {
@@ -178,9 +181,10 @@ namespace Cookbook.Controllers
         [HttpPost]
         public async Task<string> UploadImage(IFormFile file)
         {
+
             var client = new ImgurClient(
-                "6f723ed132879e0",
-                "d2226573ab16224ab0901382ebc4e75fbca58357"
+                _imgurSettings.Value.ClientId,
+                _imgurSettings.Value.ClientSecret
                 );
             var endpoint = new ImageEndpoint(client);
             IImage image;
@@ -188,7 +192,7 @@ namespace Cookbook.Controllers
             {
                 using (var ms = new MemoryStream())
                 {
-                    fileStream.CopyTo(ms);
+                    await fileStream.CopyToAsync(ms);
                     var fileBytes = ms.ToArray();
                     string s = Convert.ToBase64String(fileBytes);
                     image = await endpoint.UploadImageBinaryAsync(fileBytes);
