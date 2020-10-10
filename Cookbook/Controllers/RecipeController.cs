@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cookbook.Data;
 using Cookbook.Models;
-using Cookbook.Models.ThirdPartyServices;
+using Cookbook.Models.ThirdPartyServiceSettings;
 using Imgur.API.Authentication.Impl;
 using Imgur.API.Endpoints.Impl;
 using Imgur.API.Models;

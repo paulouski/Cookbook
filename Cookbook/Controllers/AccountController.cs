@@ -4,12 +4,14 @@ using System.Threading.Tasks;
 using Cookbook.Data;
 using Cookbook.Models;
 using Cookbook.Models.AccountViewModels;
+using Cookbook.Models.ThirdPartyServiceSettings;
 using Cookbook.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Cookbook.Controllers
 {
@@ -21,17 +23,21 @@ namespace Cookbook.Controllers
         private readonly ILogger _logger;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly EmailService emailService;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ApplicationDbContext context,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger,
+            IOptions<MailSettings> mailSettings)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _context = context;
             _logger = logger;
+
+            emailService = new EmailService(mailSettings.Value);
         }
 
         [TempData] public string ErrorMessage { get; set; }
@@ -131,7 +137,6 @@ namespace Cookbook.Controllers
                         "Account",
                         new {userId = user.Id, code},
                         HttpContext.Request.Scheme);
-                    var emailService = new EmailService();
                     await emailService.SendEmailAsync(model.Email, "Confirm your account",
                         $"Подтвердите регистрацию, перейдя по <a href='{callbackUrl}'>ссылке</a>");
 
@@ -262,7 +267,6 @@ namespace Cookbook.Controllers
                 // visit https://go.microsoft.com/fwlink/?LinkID=532713
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
-                var emailService = new EmailService();
                 await emailService.SendEmailAsync(model.Email, "Reset Password",
                     $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
                 return RedirectToAction(nameof(ForgotPasswordConfirmation));
